@@ -1,0 +1,104 @@
+-- បង្កើត ScreenGui ជាចម្បង
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local TitleLabel = Instance.new("TextLabel")
+local TableHeader = Instance.new("Frame")
+local TableBody = Instance.new("ScrollingFrame")
+local UIListLayout = Instance.new("UIListLayout")
+
+-- កំណត់លក្ខណៈ ScreenGui
+ScreenGui.Parent = game.CoreGui or game.Players.LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.Name = "CustomTableUI"
+
+-- បង្កើតផ្ទាំងក្ដារទូទៅ (Main Frame)
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+MainFrame.Position = UDim2.new(0.3, 0, 0.25, 0)
+MainFrame.Size = UDim2.new(0, 450, 0, 300)
+MainFrame.Active = true
+MainFrame.Draggable = true -- អាចចាប់អូសចុះឡើងបាន
+
+-- បង្កើត ចំណងជើងតារាង (Title)
+TitleLabel.Name = "TitleLabel"
+TitleLabel.Parent = MainFrame
+TitleLabel.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+TitleLabel.Size = UDim2.new(1, 0, 0, 40)
+TitleLabel.Font = Enum.Font.SourceSansBold
+TitleLabel.Text = "📊 តារាងទិន្នន័យ (Data Table UI)"
+TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TitleLabel.TextSize = 18.000
+
+-- បង្កើត ក្បាលតារាង (Header Columns)
+TableHeader.Name = "TableHeader"
+TableHeader.Parent = MainFrame
+TableHeader.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+TableHeader.Position = UDim2.new(0, 0, 0, 40)
+TableHeader.Size = UDim2.new(1, 0, 0, 30)
+
+local function createHeaderLabel(text, posX, sizeX)
+    local headerText = Instance.new("TextLabel")
+    headerText.Parent = TableHeader
+    headerText.BackgroundTransparency = 1
+    headerText.Position = UDim2.new(posX, 0, 0, 0)
+    headerText.Size = UDim2.new(sizeX, 0, 1, 0)
+    headerText.Font = Enum.Font.SourceSansBold
+    headerText.Text = text
+    headerText.TextColor3 = Color3.fromRGB(200, 200, 200)
+    headerText.TextSize = 15.000
+end
+
+-- ដាក់ឈ្មោះ Column
+createHeaderLabel("ឈ្មោះ (Name)", 0, 0.4)
+createHeaderLabel("កម្រិត (Level)", 0.4, 0.3)
+createHeaderLabel("ស្ថានភាព (Status)", 0.7, 0.3)
+
+-- បង្កើត Body សម្រាប់ Scrolling
+TableBody.Name = "TableBody"
+TableBody.Parent = MainFrame
+TableBody.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+TableBody.Position = UDim2.new(0, 0, 0, 70)
+TableBody.Size = UDim2.new(1, 0, 1, -70)
+TableBody.CanvasSize = UDim2.new(0, 0, 2, 0)
+TableBody.ScrollBarThickness = 6
+
+UIListLayout.Parent = TableBody
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+-- មុខងារសម្រាប់បន្ថែមទិន្នន័យជួរនីមួយៗ (Row) ចូលក្នុងតារាង
+local function addRowToTable(nameText, levelText, statusText)
+    local RowFrame = Instance.new("Frame")
+    RowFrame.Parent = TableBody
+    RowFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    RowFrame.Size = UDim2.new(1, 0, 0, 30)
+    RowFrame.BorderSizePixel = 0
+
+    local function createCellLabel(text, posX, sizeX, color)
+        local cellText = Instance.new("TextLabel")
+        cellText.Parent = RowFrame
+        cellText.BackgroundTransparency = 1
+        cellText.Position = UDim2.new(posX, 0, 0, 0)
+        cellText.Size = UDim2.new(sizeX, 0, 1, 0)
+        cellText.Font = Enum.Font.SourceSans
+        cellText.Text = text
+        cellText.TextColor3 = color or Color3.fromRGB(255, 255, 255)
+        cellText.TextSize = 14.000
+    end
+
+    createCellLabel(nameText, 0, 0.4)
+    createCellLabel(levelText, 0.4, 0.3)
+    
+    -- កំណត់ពណ៌តាមស្ថានភាព (Status)
+    local statusColor = Color3.fromRGB(0, 255, 0) -- ពណ៌បៃតង
+    if statusText == "Offline" then
+        statusColor = Color3.fromRGB(255, 50, 50) -- ពណ៌ក្រហម
+    end
+    createCellLabel(statusText, 0.7, 0.3, statusColor)
+end
+
+-- 📝 បញ្ចូលទិន្នន័យគំរូទៅក្នុងតារាង
+addRowToTable("Player1", "Max (2800)", "Online")
+addRowToTable("Player2", "Lv. 1500", "Online")
+addRowToTable("Player3", "Lv. 700", "Offline")
+addRowToTable("Player4", "Lv. 2200", "Online")
+addRowToTable("Player5", "Lv. 100", "Offline")
